@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import asyncore
 import re
-import reddit
+import praw
 import sys
 import time
 from ircutils import bot
@@ -10,6 +10,8 @@ from six.moves import configparser
 
 RE_WHITESPACE = re.compile('\s+', re.UNICODE)
 debug = True
+
+__version__ = '0.1.0'
 
 
 class RedditBot(bot.SimpleBot):
@@ -96,10 +98,10 @@ class Runner(object):
 
     def load_configuration(self):
         config = configparser.RawConfigParser()
-        if not config.read(['settings.cfg']):
+        if not config.read(['reddit_irc.ini']):
             raise Exception('Could not find settings file.')
-        RedditUpdater.class_reddit = reddit.Reddit(config.get('DEFAULT',
-                                                              'reddit_agent'))
+        RedditUpdater.class_reddit = praw.Reddit(config.get('DEFAULT',
+                                                            'reddit_agent'))
         for server in config.sections():
             self.parse_server(server, dict(config.items(server)))
 
