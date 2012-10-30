@@ -2,25 +2,24 @@ import os
 import re
 from setuptools import setup
 
-NAME = 'reddit_irc'
+MODULE_NAME = 'reddit_irc'
 
-HERE = os.path.abspath(os.path.dirname(__file__))
-MODULE_FILE = os.path.join(HERE, '{0}.py'.format(NAME))
-print MODULE_FILE
-README = open(os.path.join(HERE, 'README.md')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 VERSION = re.search("__version__ = '([^']+)'",
-                    open(MODULE_FILE).read()).group(1)
+                    open('{0}.py'.format(MODULE_NAME)).read()).group(1)
 
-
-setup(name=NAME,
-      version=VERSION,
+setup(name=MODULE_NAME,
       author='Bryce Boe',
       author_email='bbzbryce@gmail.com',
-      url='https://github.com/bboe/reddit_irc',
+      classifiers=['License :: OSI Approved :: BSD License',
+                   'Operating System :: OS Independent',
+                   'Programming Language :: Python'],
+      entry_points={'console_scripts': ['{0} = {0}:main'.format(MODULE_NAME)]},
       description='A tool to post new subreddit submissions to IRC channels.',
-      long_description=README,
-      keywords='reddit submission irc notification',
-      classifiers=['Programming Language :: Python'],
       install_requires=['ircutils', 'praw'],
-      py_modules=[NAME],
-      entry_points={'console_scripts': ['{0} = {0}:main'.format(NAME)]})
+      keywords='reddit submission irc notification',
+      license='Simplified BSD License',
+      long_description=README,
+      py_modules=[MODULE_NAME],
+      url='https://github.com/bboe/reddit_irc',
+      version=VERSION)
