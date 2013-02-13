@@ -11,7 +11,7 @@ from six.moves import configparser
 RE_WHITESPACE = re.compile('\s+', re.UNICODE)
 debug = True
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 class RedditBot(bot.SimpleBot):
@@ -121,9 +121,10 @@ class Runner(object):
             if norm_subs not in self.reddits:
                 self.reddits[norm_subs] = RedditUpdater(norm_subs)
             self.reddits[norm_subs].add(bot, channel)
+        use_ssl = item['irc_ssl'] in ('1', 'yes', 'true', 'on')
         bot.connect(items['irc_host'], int(items['irc_port']),
                     channel=channels,
-                    use_ssl=bool(items['irc_ssl']))
+                    use_ssl=use_ssl)
         bot.identify(items['irc_pswd'])
 
     def run(self):
