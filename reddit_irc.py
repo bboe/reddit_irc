@@ -121,7 +121,7 @@ class Runner(object):
             if norm_subs not in self.reddits:
                 self.reddits[norm_subs] = RedditUpdater(norm_subs)
             self.reddits[norm_subs].add(bot, channel)
-        use_ssl = item['irc_ssl'] in ('1', 'yes', 'true', 'on')
+        use_ssl = item['irc_ssl'].lower() in ('1', 'yes', 'true', 'on')
         bot.connect(items['irc_host'], int(items['irc_port']),
                     channel=channels,
                     use_ssl=use_ssl)
