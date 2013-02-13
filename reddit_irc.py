@@ -24,6 +24,7 @@ class RedditBot(bot.SimpleBot):
                          'RPL_MOTDSTART', 'RPL_MYINFO', 'RPL_NAMREPLY',
                          'RPL_STATSCONN', 'RPL_TOPIC', 'RPL_TOPICWHOTIME',
                          'RPL_YOURHOST', 'RPL_YOURID', 'RPL_WELCOME', 'TOPIC'))
+
     def __init__(self, nick, server):
         bot.SimpleBot.__init__(self, nick)
         self.real_name = '%s (https://github.com/bboe/reddit_irc)' % nick
@@ -32,8 +33,9 @@ class RedditBot(bot.SimpleBot):
     def on_any(self, event):
         if event.command in self.IGNORE_EVENTS:
             return
-        print('\t%r %s (%s->%s) %s' % (self.server, event.command, event.source,
-                                       event.target, event.params))
+        print('\t%r %s (%s->%s) %s' % (self.server, event.command,
+                                       event.source, event.target,
+                                       event.params))
 
     def on_channel_message(self, event):
         sys.stderr.write('%r (%s) <%s> %s\n' %
@@ -50,6 +52,7 @@ class RedditUpdater(object):
     MSG_FORMAT = '%s New post to /r/%s by %s: %s'
     MSG_LIMIT = 3
     class_reddit = None
+
     def __init__(self, subreddit):
         self.sr_name = subreddit
         self.subreddit = self.class_reddit.get_subreddit(subreddit)
@@ -91,6 +94,7 @@ class RedditUpdater(object):
 
 class Runner(object):
     CHECK_TIME = 30
+
     def __init__(self):
         self.bots = {}
         self.reddits = {}
@@ -121,7 +125,7 @@ class Runner(object):
             if norm_subs not in self.reddits:
                 self.reddits[norm_subs] = RedditUpdater(norm_subs)
             self.reddits[norm_subs].add(bot, channel)
-        use_ssl = item['irc_ssl'].lower() in ('1', 'yes', 'true', 'on')
+        use_ssl = items['irc_ssl'].lower() in ('1', 'yes', 'true', 'on')
         bot.connect(items['irc_host'], int(items['irc_port']),
                     channel=channels,
                     use_ssl=use_ssl)
