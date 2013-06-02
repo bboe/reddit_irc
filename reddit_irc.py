@@ -11,7 +11,7 @@ from six.moves import configparser
 RE_WHITESPACE = re.compile('\s+', re.UNICODE)
 debug = True
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 class RedditBot(bot.SimpleBot):
@@ -56,7 +56,7 @@ class RedditUpdater(object):
     def __init__(self, subreddit):
         self.sr_name = subreddit
         self.subreddit = self.class_reddit.get_subreddit(subreddit)
-        self.previous = self.subreddit.get_new_by_date().next()
+        self.previous = self.subreddit.get_new().next()
         self.associations = []
         if debug:
             print('Added %s' % subreddit)
@@ -68,7 +68,7 @@ class RedditUpdater(object):
     def update(self):
         submissions = []
         try:
-            for submission in self.subreddit.get_new_by_date():
+            for submission in self.subreddit.get_new():
                 if submission.created_utc <= self.previous.created_utc:
                     break
                 submissions.append(submission)
