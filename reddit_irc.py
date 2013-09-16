@@ -129,7 +129,8 @@ class Runner(object):
         bot.connect(items['irc_host'], int(items['irc_port']),
                     channel=channels,
                     use_ssl=use_ssl)
-        bot.identify(items['irc_pswd'])
+        if items['irc_pswd']:
+            bot.identify(items['irc_pswd'])
 
     def run(self):
         now = time.time()
