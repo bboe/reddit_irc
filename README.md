@@ -15,6 +15,7 @@ irc_pswd: PASSWORD
 irc_host: chat.freenode.net
 irc_port: 7000
 irc_ssl: true
+irc_msg: {shortlink} "{title}" by {author} in {subreddit}
 mapping: #channel1:subreddit1+subreddit2,#channel2:another_subreddit
 
 [rizon]

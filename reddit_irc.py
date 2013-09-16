@@ -15,6 +15,7 @@ __version__ = '0.1.2'
 
 
 class RedditBot(bot.SimpleBot):
+    MSG_FORMAT = u'{shortlink} New post to /r/{subreddit} by {author}: {title}'
     IGNORE_EVENTS = set(('CONN_CONNECT', 'CTCP_VERSION', 'JOIN', 'KICK',
                          'MODE', 'NICK', 'PART', 'PING', 'PRIVMSG', 'QUIT',
                          'RPL_BOUNCE', 'RPL_CREATED', 'RPL_ENDOFMOTD',
@@ -47,9 +48,19 @@ class RedditBot(bot.SimpleBot):
         print('(PRIVATE %r) <%s> %s' % (self.server, event.source,
                                         event.message))
 
+    def announce(self, submission, channel):
+        msg = (self.MSG_FORMAT.format(**dict(
+            shortlink = submission.short_link,
+            subreddit = text_type(submission.subreddit),
+            author = text_type(submission.author),
+            title = submission.title))).encode('utf-8')
+        msg = re.sub('\s+', ' ', msg).strip()
+        if debug:
+            print(msg)
+        self.send_message(channel, msg)
+
 
 class RedditUpdater(object):
-    MSG_FORMAT = '%s New post to /r/%s by %s: %s'
     MSG_LIMIT = 3
     class_reddit = None
 
@@ -81,15 +92,8 @@ class RedditUpdater(object):
             submissions = submissions[-self.MSG_LIMIT:]
         self.previous = submissions[0]
         for submission in reversed(submissions):
-            msg = (self.MSG_FORMAT % (submission.short_link,
-                                      text_type(submission.subreddit),
-                                      text_type(submission.author),
-                                      submission.title)).encode('utf-8')
-            msg = re.sub('\s+', ' ', msg).strip()
-            if debug:
-                print(msg)
             for server_bot, channel in self.associations:
-                server_bot.send_message(channel, msg)
+                server_bot.announce(submission, channel)
 
 
 class Runner(object):
@@ -129,7 +133,9 @@ class Runner(object):
         bot.connect(items['irc_host'], int(items['irc_port']),
                     channel=channels,
                     use_ssl=use_ssl)
-        if items['irc_pswd']:
+        if 'irc_msg' in items:
+            bot.MSG_FORMAT = text_type(items['irc_msg'])
+        if 'irc_pswd' in items:
             bot.identify(items['irc_pswd'])
 
     def run(self):
