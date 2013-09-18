@@ -8,7 +8,6 @@ from ircutils import bot
 from six import text_type
 from six.moves import configparser
 
-RE_WHITESPACE = re.compile('\s+', re.UNICODE)
 debug = True
 
 __version__ = '0.1.2'
@@ -49,11 +48,13 @@ class RedditBot(bot.SimpleBot):
                                         event.message))
 
     def announce(self, submission, channel):
-        msg = (self.MSG_FORMAT.format(**dict(
-            shortlink = submission.short_link,
-            subreddit = text_type(submission.subreddit),
-            author = text_type(submission.author),
-            title = submission.title))).encode('utf-8')
+        msg = (self.MSG_FORMAT.format(
+            url=submission.url,
+            permalink=submission.permalink,
+            shortlink=submission.short_link,
+            subreddit=text_type(submission.subreddit),
+            author=text_type(submission.author),
+            title=submission.title)).encode('utf-8')
         msg = re.sub('\s+', ' ', msg).strip()
         if debug:
             print(msg)
