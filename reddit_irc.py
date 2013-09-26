@@ -111,6 +111,8 @@ class Runner(object):
             raise Exception('Could not find settings file.')
         RedditUpdater.class_reddit = praw.Reddit(config.get('DEFAULT',
                                                             'reddit_agent'))
+        if config.has_option('DEFAULT', 'check_time'):
+            self.CHECK_TIME = int(config.get('DEFAULT', 'check_time'))
         for server in config.sections():
             self.parse_server(server, dict(config.items(server)))
 
@@ -150,7 +152,6 @@ class Runner(object):
                 for reddit in self.reddits.values():
                     reddit.update()
                 check_time = now + self.CHECK_TIME
-
 
 def main():
     runner = Runner()
