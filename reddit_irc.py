@@ -10,7 +10,7 @@ from six.moves import configparser
 
 debug = True
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 
 class RedditBot(bot.SimpleBot):
