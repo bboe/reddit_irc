@@ -48,13 +48,13 @@ class RedditBot(bot.SimpleBot):
                                         event.message))
 
     def announce(self, submission, channel):
-        msg = (self.MSG_FORMAT.format(
+        msg = self.MSG_FORMAT.format(
             url=submission.url,
             permalink=submission.permalink,
             shortlink=submission.short_link,
             subreddit=text_type(submission.subreddit),
             author=text_type(submission.author),
-            title=submission.title)).encode('utf-8')
+            title=submission.title).encode('utf-8')
         msg = re.sub('\s+', ' ', msg).strip()
         if debug:
             print(msg)
@@ -152,6 +152,7 @@ class Runner(object):
                 for reddit in self.reddits.values():
                     reddit.update()
                 check_time = now + self.CHECK_TIME
+
 
 def main():
     runner = Runner()
